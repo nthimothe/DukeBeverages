@@ -1,0 +1,13 @@
+.DS_Store
+*~
+*.orig
+
+
+# Byte-compiled / optimized / DLL files
+__pycache__/
+*.py[cod]
+*$py.class
+
+
+#Compiled Java files
+*.class
