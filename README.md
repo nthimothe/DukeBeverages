@@ -15,4 +15,6 @@ There are many options that can be used in visualizing the data. For a more exte
 
 ## Screenshots
 
-![Screenshot1](https://github.com/nthimothe/DukeBeverages-CustomerDataVisualizer/blob/master/Screenshots/sampleGraph1.png)
+![samplePrompt](https://github.com/nthimothe/DukeBeverages-CustomerDataVisualizer/blob/master/Screenshots/samplePrompt.png)
+
+![sampleGraph](https://github.com/nthimothe/DukeBeverages-CustomerDataVisualizer/blob/master/Screenshots/sampleGraph.png)
