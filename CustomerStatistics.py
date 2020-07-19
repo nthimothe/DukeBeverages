@@ -182,6 +182,9 @@ def determineGraphSize(nRecords, nYears):
     else:
         height = nRecords * 0.2
     
+    if height > 2 * width:
+        height = width * 1.1
+        
     return width, height
 
 def graphCreation(x, graph = 'bar', verbose = False):
@@ -199,6 +202,9 @@ def graphCreation(x, graph = 'bar', verbose = False):
     nYears = _numYears(counts)
     _checkYearCount(nYears)
     width, height = determineGraphSize(nRecords, nYears)
+    if verbose:
+        print("nRecords: {}\nnYears:{}\n".format(nRecords,nYears))
+        print("width: {}\nheihts:{}\n".format(width,height))
     plt.figure(figsize=(width,height))
 
     # TITLE, X LABEL, Y LABEL
