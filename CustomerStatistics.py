@@ -1,4 +1,7 @@
 #(c) 2019 nathan thimothe
+"""
+This module is responsible for creating a graph based on n sample records that are passed in. 
+"""
 from Customer import *
 from datetime import *
 from dateutil.relativedelta import relativedelta
@@ -14,7 +17,12 @@ def _populate(x):
     Populate a list of Customers based on a csv file. 
     """
     result = []
-    f = open(x)
+    try:
+        f = open(x)
+    except FileNotFoundError:
+        print("File could not be found.")
+        quit()
+
     count = 0
     for row in csv.reader(f):
         if count == 0:
@@ -110,7 +118,7 @@ def _updateDict(dictionary, key, id, addedValue):
     dictionary[key][id] += addedValue
         
 
-def collectData(x):
+def collectData(x, verbose):
     months = []
     customers = _populate(x) #list of customers
     #dictionary where the month is the key and the value is a tuple of dictionaries of DJ and ML quantities. 
@@ -142,7 +150,8 @@ def collectData(x):
                 _updateDict(counts, month, 'ml', int(quantity[1]))
         except:
             pass
-
+        if verbose:
+            print(counts)
     return counts
 
 def _checkYearCount(nYears):
@@ -175,25 +184,23 @@ def determineGraphSize(nRecords, nYears):
     
     return width, height
 
-def graphCreation(x, graph = 'bar'):
-    counts = collectData(x)
-    print(counts)
+def graphCreation(x, graph = 'bar', verbose = False):
+    counts = collectData(x, verbose)
+
 
 
     # CREATE GRAPH    
     months = list(counts.keys())
     monthlyDJ = _retValues(counts.values(),'dj')
     monthlyML = _retValues(counts.values(),'ml')
+
     # SIZE OF GRAPH
     nRecords = _numRecords(x)
     nYears = _numYears(counts)
-    print("nRecords:{}\nnYears:{}\n".format(nRecords, nYears))
-
     _checkYearCount(nYears)
-
     width, height = determineGraphSize(nRecords, nYears)
-    print("width:{}\nheight:{}".format(width, height))
     plt.figure(figsize=(width,height))
+
     # TITLE, X LABEL, Y LABEL
     plt.title("Duke Beverages Sales Per Month",fontweight = 'bold', fontsize = 18)
     plt.xlabel("Months", fontweight = 'bold', fontsize = 12)
@@ -230,7 +237,7 @@ def graphCreation(x, graph = 'bar'):
 def help():
     return """
 Run the program as follows:
-      python3 CustomerStatistics.py line. sampleRecords.csv
+      python3 CustomerStatistics.py -t line. -f sampleRecords.csv
 """
 
 if __name__ == "__main__":
@@ -242,7 +249,8 @@ if __name__ == "__main__":
     parser = argparse.ArgumentParser(formatter_class = argparse.RawDescriptionHelpFormatter, description='Generate a graph describing sales per month for n sample records.', epilog = textwrap.dedent(help()))
     parser.add_argument('-t','--type', type=str, action='store', dest='type', help="Type of graph to create...options include: 'line.', 'lineX', 'line', 'bar' (default).", default = 'bar')
     parser.add_argument('-f','--file', type=str, action='store', dest='filename', help="CSV file that contains n sample records that will be parsed by this program. sampleRecords.csv (default).", default = 'sampleRecords.csv')
+    parser.add_argument("--v",action='store_true', help="Cause program to be verbose, showing records as they are parsed.")
     args = parser.parse_args()
     
-    graphCreation(args.filename.lower(), args.type.lower())
+    graphCreation(args.filename.lower(), args.type.lower(), args.v)
     

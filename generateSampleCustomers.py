@@ -112,7 +112,7 @@ def writeFile(numRecords, yearSpan):
 def help():
     return """
    Please enter a positive number of sample records to produce...
-        python3 generateSampleCustomers.py 35
+        python3 generateSampleCustomers.py -n 35
 """
 
 
