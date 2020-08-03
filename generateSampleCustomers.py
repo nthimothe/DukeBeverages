@@ -4,7 +4,9 @@ from datetime import *
 
 def generateNameList():
     x = open('names.txt', 'r')
-    return [line.strip() for line in x]
+    l = [line.strip() for line in x]
+    x.close()
+    return l
 
 def formatList(list):
     #take in a list, and return it correctly formatted: "____" or "____, ____"

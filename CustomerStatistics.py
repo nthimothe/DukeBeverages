@@ -78,17 +78,6 @@ def _numRecords(x):
     f.close()
     return count-1
 
-def _find(value, id): 
-    """
-    Find a certain string key (id) in a tuple of two dictionaries, and return that dictionary so that 
-    it may be modified # e.g. ({id: value}, {id:value}),
-    >>> find( ({'id': 30}, {'id1':45}) , 'id1')
-    45
-    """
-    for dict in value:
-        if dict.__contains__(id):
-            return dict
-
 def _retValues(iterable, id):
     """
     Traverses a list of dictionaries and finds all dicionaries that contain a certain key.
@@ -190,8 +179,6 @@ def determineGraphSize(nRecords, nYears):
 def graphCreation(x, graph = 'bar', verbose = False):
     counts = collectData(x, verbose)
 
-
-
     # CREATE GRAPH    
     months = list(counts.keys())
     monthlyDJ = _retValues(counts.values(),'dj')
@@ -212,9 +199,10 @@ def graphCreation(x, graph = 'bar', verbose = False):
     plt.xlabel("Months", fontweight = 'bold', fontsize = 12)
     plt.ylabel("Number of Sales", fontweight = 'bold', fontsize = 12)
 
+    graph = graph.strip()
 
     # TYPE OF GRAPH
-    if graph.strip() == 'bar':
+    if graph == 'bar':
         barWidth = 0.25
         #setting positions of bars
         bar1 = np.arange(len(months))
@@ -224,13 +212,13 @@ def graphCreation(x, graph = 'bar', verbose = False):
         plt.bar(bar2,monthlyML,width = barWidth, color = 'C1', label = 'Mango Lime')
         #set the x ticks
         plt.xticks([x + (barWidth/2) for x in range(len(bar1))], months)
-    elif graph.strip() == 'line':
+    elif graph == 'line':
         plt.plot(months,monthlyDJ,'b', label = 'Duke Juice')
         plt.plot(months,monthlyML,'C1', label = 'Mango Lime')
-    elif graph.strip() == 'lineX':
+    elif graph == 'linex':
         plt.plot(months,monthlyDJ, 'xb-', label = 'Duke Juice')
         plt.plot(months,monthlyML, 'xC1-', label = 'Mango Lime')
-    elif graph.strip() == 'line.':
+    elif graph == 'line.':
         plt.scatter(months,monthlyDJ, color = 'b')
         plt.plot(months,monthlyDJ,color = 'b', label = 'Duke Juice')
         plt.scatter(months,monthlyML, color = 'C1')
