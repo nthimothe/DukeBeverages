@@ -37,7 +37,7 @@ def randDate(start = None, end = None, years = 1):
  
 def writeFile(numRecords, yearSpan):
     file = open("sampleRecords.csv", 'w')
-    file.write('Delivery Date,Organization Name / Name,Phone,Email,Beverage,Quantity,Price,Total Revenue\n')
+    file.write('Delivery Date,Organization Name / Name,Class Year,Phone,Email,Beverage,Quantity,Price,Total Revenue\n')
     startingMonth = str(randint(1,6))
     sampleCustomers = []
 
@@ -53,7 +53,10 @@ def writeFile(numRecords, yearSpan):
         randLastName = names[randint(0,length-1)]
         name = randFirstName + ' ' + randLastName
 
-        
+        ### YEAR
+        currYear = datetime.today().year
+        year = randint(currYear, currYear+4)
+
         ### PHONE NUMBER
         #create a random phone number
         phoneNum = str(randint(10000000000,19999999999))[1:]
@@ -103,13 +106,13 @@ def writeFile(numRecords, yearSpan):
         price *= 3.75 if price < 5 else 3.50
 
 
-        newCustomer = Customer(name, phoneNum, email, deliveryDate, formattedBeverages, formattedQuantities, price)
+        newCustomer = Customer(name, year, phoneNum, email, deliveryDate, formattedBeverages, formattedQuantities, price)
         sampleCustomers.append(newCustomer)
     
     sampleCustomers.sort(key = lambda x : datetime.strptime(x.deliveryDate, "%m/%d/%Y"))
 
     for customer in sampleCustomers:
-        file.write("{},{},{},{},{},{},${},\n".format(customer.deliveryDate,customer.name,customer.phone,customer.email,customer.beverages,customer.quantities,customer.price))
+        file.write("{},{},{},{},{},{},{},${},\n".format(customer.deliveryDate,customer.name,customer.year,customer.phone,customer.email,customer.beverages,customer.quantities,customer.price))
 
 def help():
     return """

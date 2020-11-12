@@ -30,13 +30,14 @@ def _populate(x):
             continue
         deliveryDate = row[0].strip()
         name = row[1].strip()
-        phone = row[2].strip()
-        email = row[3].strip()
+        classYear = int(row[2].strip()) if row[2].strip() != "N/A" else None
+        phone = row[3].strip()
+        email = row[4].strip()
         #list comprehension to remove whitespace of each element in list
-        beverages = [juice.strip() for juice in row[4].split(",")]
-        quantity = [amount.strip() for amount in row[5].split(",")]
-        price = row[6].strip()
-        customer = Customer(name,phone,email,deliveryDate,beverages,quantity,price)
+        beverages = [juice.strip() for juice in row[5].split(",")]
+        quantity = [int(amount.strip()) for amount in row[6].split(",")]
+        price = row[7].strip()
+        customer = Customer(name,classYear,phone,email,deliveryDate,beverages,quantity,price)
         result.append(customer)
     f.close()
     return result
@@ -113,7 +114,6 @@ def collectData(x, verbose):
     #dictionary where the month is the key and the value is a tuple of dictionaries of DJ and ML quantities. 
     #create a from the least recent to the most recent date of customer purchases
     counts = _createDict(datetime.strptime(customers[0].deliveryDate, "%m/%d/%Y"), datetime.strptime(customers[-1].deliveryDate, "%m/%d/%Y"))
-
     for customer in customers:
         # 1) GET THE MONTH FROM THE APPROPRIATE SECTION OF CUSTOMER CLASS
         date = datetime.strptime(customer.deliveryDate, "%m/%d/%Y")
@@ -176,7 +176,7 @@ def determineGraphSize(nRecords, nYears):
         
     return width, height
 
-def graphCreation(x, graph = 'bar', verbose = False):
+def graphCreation(x, graph = 'bar', w = None, h = None, verbose = False):
     counts = collectData(x, verbose)
 
     # CREATE GRAPH    
@@ -188,7 +188,11 @@ def graphCreation(x, graph = 'bar', verbose = False):
     nRecords = _numRecords(x)
     nYears = _numYears(counts)
     _checkYearCount(nYears)
-    width, height = determineGraphSize(nRecords, nYears)
+    if not w and not h:
+        width, height = determineGraphSize(nRecords, nYears) 
+    else:
+        width, height = w, h
+        
     if verbose:
         print("nRecords: {}\nnYears:{}\n".format(nRecords,nYears))
         print("width: {}\nheihts:{}\n".format(width,height))
@@ -243,8 +247,10 @@ if __name__ == "__main__":
     parser = argparse.ArgumentParser(formatter_class = argparse.RawDescriptionHelpFormatter, description='Generate a graph describing sales per month for n sample records.', epilog = textwrap.dedent(help()))
     parser.add_argument('-t','--type', type=str, action='store', dest='type', help="Type of graph to create...options include: 'line.', 'lineX', 'line', 'bar' (default).", default = 'bar')
     parser.add_argument('-f','--file', type=str, action='store', dest='filename', help="CSV file that contains n sample records that will be parsed by this program. sampleRecords.csv (default).", default = 'sampleRecords.csv')
+    parser.add_argument('-width', type=int, action='store', dest='width', help="Manually set width of the graph.", default = None)
+    parser.add_argument('-height', type=int, action='store', dest='height', help="Manually set height of the graph.", default = None)
     parser.add_argument("--v",action='store_true', help="Cause program to be verbose, showing records as they are parsed.")
     args = parser.parse_args()
     
-    graphCreation(args.filename.lower(), args.type.lower(), args.v)
+    graphCreation(args.filename.lower(), args.type.lower(), args.width, args.height, args.v)
     
