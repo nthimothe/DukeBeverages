@@ -72,12 +72,10 @@ def _numYears(dictionary):
     return eYear - sYear
 
 def _numRecords(x):
-    f = open(x, 'r')
-    count = 0
-    for x in f:
+    count = -1 # ignore the first line of csv
+    with open(x,'r') as f:
         count += 1
-    f.close()
-    return count-1
+    return count
 
 def _retValues(iterable, id):
     """
@@ -176,6 +174,19 @@ def determineGraphSize(nRecords, nYears):
         
     return width, height
 
+def annotate(months, monthlyDJ, monthlyML):
+    for i in range(len(months)):
+        month = months[i]
+        djNum = monthlyDJ[i]
+        mlNum = monthlyML[i]
+        print("Point: ({}, {})".format(month, djNum))
+        print("Point: ({}, {})".format(month, mlNum))
+        if djNum == mlNum:
+            plt.annotate(str(djNum), (month, djNum), xytext=(0,4), textcoords="offset points", weight = 'bold')
+        else:
+            plt.annotate(str(djNum), (month, djNum), xytext=(0,6), textcoords="offset points", ha = 'center', weight = 'bold')
+            plt.annotate(str(mlNum), (month, mlNum), xytext=(8,6), textcoords="offset points", weight = 'bold')
+        
 def graphCreation(x, graph = 'bar', w = None, h = None, verbose = False):
     counts = collectData(x, verbose)
 
@@ -211,22 +222,27 @@ def graphCreation(x, graph = 'bar', w = None, h = None, verbose = False):
         #setting positions of bars
         bar1 = np.arange(len(months))
         bar2 = [x+barWidth for x in bar1]
+        print(bar1)
+        print("That's it!!!")
         #plotting bars
         plt.bar(bar1,monthlyDJ,width = barWidth, color = 'b', label = 'Duke Juice' )
         plt.bar(bar2,monthlyML,width = barWidth, color = 'C1', label = 'Mango Lime')
         #set the x ticks
         plt.xticks([x + (barWidth/2) for x in range(len(bar1))], months)
-    elif graph == 'line':
-        plt.plot(months,monthlyDJ,'b', label = 'Duke Juice')
-        plt.plot(months,monthlyML,'C1', label = 'Mango Lime')
-    elif graph == 'linex':
-        plt.plot(months,monthlyDJ, 'xb-', label = 'Duke Juice')
-        plt.plot(months,monthlyML, 'xC1-', label = 'Mango Lime')
-    elif graph == 'line.':
-        plt.scatter(months,monthlyDJ, color = 'b')
-        plt.plot(months,monthlyDJ,color = 'b', label = 'Duke Juice')
-        plt.scatter(months,monthlyML, color = 'C1')
-        plt.plot(months,monthlyML, color = 'C1', label = 'Mango Lime')
+        annotate(bar1, monthlyDJ, monthlyML)
+    else:
+        if graph == 'line':
+            plt.plot(months,monthlyDJ,'b', label = 'Duke Juice')
+            plt.plot(months,monthlyML,'C1', label = 'Mango Lime')
+        elif graph == 'linex':
+            plt.plot(months,monthlyDJ, 'xb-', label = 'Duke Juice')
+            plt.plot(months,monthlyML, 'xC1-', label = 'Mango Lime')
+        elif graph == 'line.':
+            plt.scatter(months,monthlyDJ, color = 'b')
+            plt.plot(months,monthlyDJ,color = 'b', label = 'Duke Juice')
+            plt.scatter(months,monthlyML, color = 'C1')
+            plt.plot(months,monthlyML, color = 'C1', label = 'Mango Lime')
+        annotate(months, monthlyDJ, monthlyML)
     plt.legend()
     
     plt.savefig("MonthlySales.pdf")
