@@ -185,7 +185,7 @@ def annotate(months, monthlyDJ, monthlyML):
             plt.annotate(str(djNum), (month, djNum), xytext=(0,4), textcoords="offset points", weight = 'bold')
         else:
             plt.annotate(str(djNum), (month, djNum), xytext=(0,6), textcoords="offset points", ha = 'center', weight = 'bold')
-            plt.annotate(str(mlNum), (month, mlNum), xytext=(8,6), textcoords="offset points", weight = 'bold')
+            plt.annotate(str(mlNum), (month, mlNum), xytext=(12,6), textcoords="offset points", weight = 'bold')
         
 def graphCreation(x, graph = 'bar', w = None, h = None, verbose = False):
     counts = collectData(x, verbose)
