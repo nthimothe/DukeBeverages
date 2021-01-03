@@ -179,8 +179,6 @@ def annotate(months, monthlyDJ, monthlyML):
         month = months[i]
         djNum = monthlyDJ[i]
         mlNum = monthlyML[i]
-        print("Point: ({}, {})".format(month, djNum))
-        print("Point: ({}, {})".format(month, mlNum))
         if djNum == mlNum:
             plt.annotate(str(djNum), (month, djNum), xytext=(0,4), textcoords="offset points", weight = 'bold')
         else:
@@ -222,8 +220,6 @@ def graphCreation(x, graph = 'bar', w = None, h = None, verbose = False):
         #setting positions of bars
         bar1 = np.arange(len(months))
         bar2 = [x+barWidth for x in bar1]
-        print(bar1)
-        print("That's it!!!")
         #plotting bars
         plt.bar(bar1,monthlyDJ,width = barWidth, color = 'b', label = 'Duke Juice' )
         plt.bar(bar2,monthlyML,width = barWidth, color = 'C1', label = 'Mango Lime')
